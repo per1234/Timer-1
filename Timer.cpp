@@ -3,14 +3,9 @@
 
 typedef void (* CallBack)();
 
-static uint32_t Timer::runTime = 0;
+static uint32_t Timer::getMillis(void) { return millis(); } 
+static uint32_t Timer::getSeconds(void) { return millis() / 1000; } 
 
-static uint32_t Timer::getTimeMillis(void) {
-  return millis();
-} 
-static uint32_t Timer::getTimeSecond(void) {
-  return millis() / 1000;
-} 
 
 
 void Timer::set(uint8_t frequency, uint32_t time, CallBack callback) { 
@@ -23,14 +18,13 @@ void Timer::setTime(uint32_t time) {
   this->_time = time;
 }
 
-
 void Timer::start() {
   this->_state = Timer::RUNNING;
 }
 
 void Timer::run() {
-  if ((Timer::getTimeMillis() - this->_timeStart) >= this->_time) {
-    this->_timeStart = Timer::getTimeMillis();
+  if ((Timer::getMillis() - this->_timeStart) >= this->_time) {
+    this->_timeStart = Timer::getMillis();
   } else {
     return;
   } 

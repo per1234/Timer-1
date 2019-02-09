@@ -3,8 +3,8 @@
 Timer timer0;
 
 void callback0() {
-    Serial.println("Millis  : " + String( Timer::getTimeMillis()));
-    Serial.println("Second  : " + String( Timer::getTimeSecond()));
+    Serial.println("Millis  : " + String( Timer::getMillis()));
+    Serial.println("Second  : " + String( Timer::getSeconds()));
 }
 
 void setup() {

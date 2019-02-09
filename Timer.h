@@ -11,17 +11,13 @@ class Timer {
 
 public:
 
-  static uint32_t runTime;
-
   static const uint8_t FOREVER = -1;
   static const uint8_t NEVER = 0;
   static const uint8_t ONCE = 1;
   static const uint8_t TWICE = 2;
 
-
-
-  static uint32_t getTimeMillis(void);
-  static uint32_t getTimeSecond(void);
+  static uint32_t getMillis(void);
+  static uint32_t getSeconds(void);
 
   void set(uint8_t frequency, uint32_t time, CallBack callback);
   void setTime(uint32_t time);
