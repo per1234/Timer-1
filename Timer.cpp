@@ -1,7 +1,7 @@
 #include "Timer.h"
 #include "Arduino.h"
 
-typedef void (* CallBack)();
+typedef void (* Callback)();
 
 static uint32_t Timer::getMicros(void) { return micros(); } 
 static uint32_t Timer::getMillis(void) { return millis(); } 
@@ -13,45 +13,50 @@ Timer::Timer(uint8_t unit){
 }
 
 
-void Timer::set(uint8_t frequency, uint32_t time, CallBack callback) { 
-  _time = time;
+void Timer::begin(uint8_t frequency, uint32_t timeInterval, Callback callback) { 
+  _timeInterval = timeInterval;
   _frequency = frequency;
   _callback = callback;
 }
 
-void Timer::setTime(uint32_t time) { 
-  _time = time;
+void Timer::setFrequency(uint8_t frequency) { 
+  _frequency = frequency;
+}
+
+void Timer::setTimeInterval(uint32_t timeInterval) { 
+  _timeInterval = timeInterval;
+}
+
+void Timer::setCallback(Callback callback) { 
+  _callback = callback;
 }
 
 void Timer::start() {
-  _state = Timer::RUNNING;
+  _state = Timer::STARTED;
 }
 
-uint32_t Timer::getCount(void) {
+uint32_t Timer::getTime(void) {
   if (_unit == Timer::MICROS) return Timer::getMicros();
   else if (_unit == Timer::MILLIS) return Timer::getMillis();
   else if (_unit == Timer::SECONDS) return Timer::getSeconds();
 }
 
-void Timer::run() {
-  uint32_t time = getCount();
-  uint32_t timeElapse = time - _timeStart;
+uint32_t Timer::getTimeElapse(void) {
+    return getTime() - _timeStart;
+}
 
-  if (timeElapse >= _time) _timeStart = getCount();
+void Timer::run() {
+  if (getTimeElapse() >= _timeInterval) _timeStart = getTime();
   else return; 
 
-  if (_state == Timer::PAUSED) return;
+  if (_state == Timer::STOPPED) return;
 
   if (_frequency == Timer::NEVER) { /*do nothing */ } 
-  else if (_frequency == Timer::FOREVER ) _callback(); 
+  else if (_frequency == Timer::FOREVER ) { _callback(); } 
   else if (_frequency > _count) { _count++; _callback(); }
 
 }
 
 void Timer::stop() {
-  _frequency = Timer::NEVER;
-}
-
-void Timer::pause() {
-  _state = Timer::PAUSED;
+  _state = Timer::STOPPED;
 }

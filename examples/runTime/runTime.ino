@@ -22,9 +22,9 @@ void setup() {
   Serial.println(F("Welcome to Timer class..."));
   Serial.println(F("rhalfcaacbay@gmail.com"));
 
-  timer0.set(Timer::FOREVER, 1000000, callback0);
-  timer1.set(Timer::FOREVER, 1000, callback1);
-  timer2.set(Timer::FOREVER, 1, callback2);
+  timer0.begin(Timer::FOREVER, 1000000, callback0);
+  timer1.begin(Timer::FOREVER, 1000, callback1);
+  timer2.begin(Timer::FOREVER, 1, callback2);
 
   timer0.start();
   timer1.start();

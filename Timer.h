@@ -5,7 +5,7 @@
 #include "Arduino.h"
 
 /// @author Rhalf Wendel D Caacbay <rhalfcaacbay@gmail.com>
-typedef void (* CallBack)();
+typedef void (* Callback)();
 
 class Timer {
 
@@ -25,10 +25,15 @@ public:
   static uint32_t getSeconds(void);
 
   Timer(uint8_t unit);
-  void set(uint8_t frequency, uint32_t time, CallBack callback);
-  void setTime(uint32_t time);
 
-  uint32_t getCount(void);
+  void begin(uint8_t frequency, uint32_t timeInterval, Callback callback);
+  
+  void setFrequency(uint8_t frequency);
+  void setTimeInterval(uint32_t time);
+  void setCallback(Callback callback);
+
+  uint32_t getTime(void);
+  uint32_t getTimeElapse(void);
 
   void start();
   void stop();
@@ -39,18 +44,16 @@ private:
   uint8_t _unit = 0;
   uint8_t _state = 0;
   uint8_t _frequency = 0;
+  
   uint8_t _count = 0;
 
-  static const uint8_t STOPPED = -1;
-  static const uint8_t PAUSED = 0;
-  static const uint8_t RUNNING = 1;
+  static const uint8_t STOPPED = 0;
+  static const uint8_t STARTED = 1;
   
-  
-
   uint32_t _timeStart = 0;
-  uint32_t _time = 0;
+  uint32_t _timeInterval = 0;
 
 
-  CallBack _callback = NULL;
+  Callback _callback = NULL;
 };
 #endif // _TIMER_H
