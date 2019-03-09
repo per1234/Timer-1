@@ -3,51 +3,55 @@
 
 typedef void (* CallBack)();
 
+static uint32_t Timer::getMicros(void) { return micros(); } 
 static uint32_t Timer::getMillis(void) { return millis(); } 
 static uint32_t Timer::getSeconds(void) { return millis() / 1000; } 
 
 
+Timer::Timer(uint8_t unit){
+  _unit = unit;
+}
+
 
 void Timer::set(uint8_t frequency, uint32_t time, CallBack callback) { 
-  this->_time = time;
-  this->_frequency = frequency;
-  this->_callback = callback;
+  _time = time;
+  _frequency = frequency;
+  _callback = callback;
 }
 
 void Timer::setTime(uint32_t time) { 
-  this->_time = time;
+  _time = time;
 }
 
 void Timer::start() {
-  this->_state = Timer::RUNNING;
+  _state = Timer::RUNNING;
+}
+
+uint32_t Timer::getCount(void) {
+  if (_unit == Timer::MICROS) return Timer::getMicros();
+  else if (_unit == Timer::MILLIS) return Timer::getMillis();
+  else if (_unit == Timer::SECONDS) return Timer::getSeconds();
 }
 
 void Timer::run() {
-  if ((Timer::getMillis() - this->_timeStart) >= this->_time) {
-    this->_timeStart = Timer::getMillis();
-  } else {
-    return;
-  } 
+  uint32_t time = getCount();
+  uint32_t timeElapse = time - _timeStart;
 
-  if (this->_state == Timer::PAUSED) {
-    return;
-  }
+  if (timeElapse >= _time) _timeStart = getCount();
+  else return; 
 
+  if (_state == Timer::PAUSED) return;
 
-  if(this->_frequency == Timer::NEVER) {
-    //do nothing
-  } else if (this->_frequency == Timer::FOREVER ) {
-    this->_callback();
-  } else if (this->_frequency > this->_count) {
-    this->_count++;
-    this->_callback();
-  }
+  if (_frequency == Timer::NEVER) { /*do nothing */ } 
+  else if (_frequency == Timer::FOREVER ) _callback(); 
+  else if (_frequency > _count) { _count++; _callback(); }
+
 }
 
 void Timer::stop() {
-  this->_frequency = Timer::NEVER;
+  _frequency = Timer::NEVER;
 }
 
 void Timer::pause() {
-  this->_state = Timer::PAUSED;
+  _state = Timer::PAUSED;
 }

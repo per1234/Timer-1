@@ -1,6 +1,6 @@
 #include<Timer.h>
 
-Timer timer0, timer1, timer2, timer3, timer4;
+Timer timer0(Timer::MILLIS), timer1(Timer::MILLIS), timer2(Timer::MILLIS), timer3(Timer::MILLIS), timer4(Timer::MILLIS);
 
 void callback0() {
   Serial.println("never print");
